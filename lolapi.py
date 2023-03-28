@@ -1,25 +1,11 @@
+import requests
 import config
 import discord
-import os
-import requests
 import json
 
 intents = discord.Intents.all()
 
 client = discord.Client(intents=intents)
-
-sad_words = ["sad", "depressed", "unhappy", "angry", "miserable"]
-starter_encouragements = [
-  "Cheer up!",
-  "Hang in there.",
-  "You are a great person / bot!"
-]
-
-def get_quote():
-  response = requests.get("https://zenquotes.io/api/random")
-  json_data = json.loads(response.text)
-  quote = json_data[0]['q'] + " -" + json_data[0]['a']
-  return(quote)
 
 @client.event
 async def on_ready():
@@ -29,14 +15,16 @@ async def on_ready():
 async def on_message(message):
     if message.author == client.user:
         return
-
+    
     msg = message.content
 
-    if msg.startswith('$hello'):
-        await message.channel.send('Hello!')
+    if msg.startswith('$status'):
+        response = requests.get("https://na1.api.riotgames.com/lol/status/v4/platform-data?api_key={}".format(config.API_KEY))
+        await message.channel.send(response)
+        dict = json.loads(response)
+        
+        print(response.content)
 
-    if msg.startswith('$inspire'):
-        quote = get_quote()
-        await message.channel.send(quote)   
+# response = requests.get("https://na1.api.riotgames.com/lol/summoner/v4/summoners/by-name/sFzzz?api_key={}".format(config.API_KEY))
 
 client.run(config.LPBOT_KEY)
