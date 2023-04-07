@@ -42,7 +42,8 @@ async def first_command(interaction):
     await interaction.response.send_message("You're dogshit!")
 
 @tree.command(name="name", description="description",guild=discord.Object(id=719741641463824425))
-async def slash_command(interaction: discord.Interaction):    
+async def slash_command(interaction: discord.Interaction):   
+     
     await interaction.response.send_message("command")
 
 client.run(config.LPBOT_KEY)
